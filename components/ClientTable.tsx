@@ -29,10 +29,10 @@ const columns: ColumnDef<Client>[] = [
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="pl-0 hover:bg-transparent"
+          className="pl-0 hover:bg-transparent font-semibold text-foreground/80 hover:text-foreground"
         >
           Client Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className="ml-2 h-4 w-4 opacity-50" />
         </Button>
       )
     },
@@ -45,24 +45,61 @@ const columns: ColumnDef<Client>[] = [
   },
   {
     accessorKey: 'status',
-    header: 'Health',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="pl-0 hover:bg-transparent hover:text-foreground"
+        >
+          Health
+          <ArrowUpDown className="ml-2 h-4 w-4 opacity-50" />
+        </Button>
+      )
+    },
     cell: ({ row }) => {
       const status = row.getValue('status') as HealthStatus;
       let variant: 'success' | 'warning' | 'destructive' = 'success';
       if (status === HealthStatus.Amber) variant = 'warning';
       if (status === HealthStatus.Red) variant = 'destructive';
-      
+
       return <Badge variant={variant}>{status}</Badge>;
     },
   },
   {
     accessorKey: 'mrr',
-    header: () => <div className="text-right">MRR</div>,
-    cell: ({ row }) => <div className="text-right font-mono">{formatCurrency(row.getValue('mrr'))}</div>,
+    header: ({ column }) => {
+      return (
+        <div className="text-right">
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="pr-0 hover:bg-transparent hover:text-foreground"
+          >
+            MRR
+            <ArrowUpDown className="ml-2 h-4 w-4 opacity-50" />
+          </Button>
+        </div>
+      )
+    },
+    cell: ({ row }) => <div className="text-right font-mono text-muted-foreground/90">{formatCurrency(row.getValue('mrr'))}</div>,
   },
   {
     accessorKey: 'margin',
-    header: () => <div className="text-right">Margin</div>,
+    header: ({ column }) => {
+      return (
+        <div className="text-right">
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="pr-0 hover:bg-transparent hover:text-foreground"
+          >
+            Margin
+            <ArrowUpDown className="ml-2 h-4 w-4 opacity-50" />
+          </Button>
+        </div>
+      )
+    },
     cell: ({ row }) => {
       const margin = row.getValue('margin') as number;
       const isLow = margin < 40;
@@ -79,10 +116,10 @@ const columns: ColumnDef<Client>[] = [
     cell: () => {
       return (
         <div className="text-right">
-             <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
+          <Button variant="ghost" className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
         </div>
       );
     },
@@ -113,9 +150,9 @@ export function ClientTable({ data, isLoading }: ClientTableProps) {
       <div className="space-y-3">
         <div className="h-10 w-[250px] bg-muted/50 rounded animate-pulse" />
         <div className="rounded-md border border-border/40">
-           {[...Array(5)].map((_, i) => (
-             <div key={i} className="h-12 w-full border-b border-border/40 bg-muted/10 animate-pulse" />
-           ))}
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="h-12 w-full border-b border-border/40 bg-muted/10 animate-pulse" />
+          ))}
         </div>
       </div>
     );
@@ -144,9 +181,9 @@ export function ClientTable({ data, isLoading }: ClientTableProps) {
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                   </th>
                 ))}
               </tr>
@@ -158,7 +195,7 @@ export function ClientTable({ data, isLoading }: ClientTableProps) {
                 <tr
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+                  className="border-b transition-colors hover:bg-muted/30 data-[state=selected]:bg-muted group"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} className="p-4 align-middle [&:has([role=checkbox])]:pr-0">

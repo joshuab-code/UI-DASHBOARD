@@ -33,9 +33,10 @@ export function CreateClientDialog({ open, onOpenChange, onSuccess }: CreateClie
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
+    mode: 'onChange', // Real-time validation for trust
     defaultValues: {
       name: '',
       offer: OfferType.LocalGrowth,
@@ -46,7 +47,7 @@ export function CreateClientDialog({ open, onOpenChange, onSuccess }: CreateClie
 
   const onSubmit = async (data: FormValues) => {
     setIsPending(true);
-    
+
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 800));
 
@@ -76,7 +77,7 @@ export function CreateClientDialog({ open, onOpenChange, onSuccess }: CreateClie
           Add a new client to the command centre. Ensure contract is signed.
         </DialogDescription>
       </DialogHeader>
-      
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-4">
         <div className="space-y-2">
           <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
@@ -100,22 +101,22 @@ export function CreateClientDialog({ open, onOpenChange, onSuccess }: CreateClie
             <Input type="number" {...register('mrr')} />
             {errors.mrr && <p className="text-xs text-destructive">{errors.mrr.message}</p>}
           </div>
-          
+
           <div className="space-y-2">
             <label className="text-sm font-medium leading-none">Initial Status</label>
-             <Select {...register('status')}>
-                <option value={HealthStatus.Green}>Green</option>
-                <option value={HealthStatus.Amber}>Amber</option>
-                <option value={HealthStatus.Red}>Red</option>
-             </Select>
+            <Select {...register('status')}>
+              <option value={HealthStatus.Green}>Green</option>
+              <option value={HealthStatus.Amber}>Amber</option>
+              <option value={HealthStatus.Red}>Red</option>
+            </Select>
           </div>
         </div>
 
         <DialogFooter className="pt-4">
-           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-           <Button type="submit" disabled={isPending}>
-             {isPending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Saving...</> : 'Create Client'}
-           </Button>
+          <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+          <Button type="submit" disabled={isPending}>
+            {isPending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...</> : 'Create Client'}
+          </Button>
         </DialogFooter>
       </form>
     </Dialog>
