@@ -1,7 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
-import "./index.css"; // Assuming Tailwind directives might be here or injected via HTML script
+import "../index.css";
 
 const container = document.getElementById("root");
 if (container) {
